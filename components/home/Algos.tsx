@@ -1,7 +1,9 @@
-import { algos } from "@/data/algos";
+"use client";
+
 import React from "react";
 import { Separator } from "../ui/separator";
 import Link from "next/link";
+import { useAlgos } from "@/hooks/useAlgoStore";
 
 type CardProps = {
   slug: string;
@@ -12,6 +14,7 @@ type CardProps = {
 };
 
 const Algos = () => {
+  const { algos } = useAlgos();
   return (
     <section className="max-w-5xl mx-auto mb-5">
       <Card

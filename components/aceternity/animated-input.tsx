@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
+import { useAlgos } from "@/hooks/useAlgoStore";
 
 export function AnimatedInput() {
   const placeholders = [
@@ -10,28 +11,15 @@ export function AnimatedInput() {
     "Least recently used cache",
     "Fractional Knapsack",
     "Minimum number of coins",
-    "N meeting in one room",
+    "N meetings in one room",
   ];
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(e.target.value);
-  };
-
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log("submitted");
-  };
 
   return (
     <div className="h-fit flex flex-col justify-center items-center px-4">
       <h2 className="mb-10 sm:mb-20 text-center text-5xl font-serif font-bold">
         <span className="italic font-normal">Only</span>Algos
       </h2>
-      <PlaceholderAndVanishInput
-        placeholders={placeholders}
-        onChange={handleChange}
-        onSubmit={onSubmit}
-      />
+      <PlaceholderAndVanishInput placeholders={placeholders} />
     </div>
   );
 }
@@ -42,8 +30,8 @@ function PlaceholderAndVanishInput({
   onSubmit,
 }: {
   placeholders: string[];
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onSubmit?: (e: React.FormEvent<HTMLFormElement>) => void;
 }) {
   const [currentPlaceholder, setCurrentPlaceholder] = useState(0);
 
@@ -80,6 +68,7 @@ function PlaceholderAndVanishInput({
   const inputRef = useRef<HTMLInputElement>(null);
   const [value, setValue] = useState("");
   const [animating, setAnimating] = useState(false);
+  const { algos, setAlgos } = useAlgos();
 
   const draw = useCallback(() => {
     if (!inputRef.current) return;
@@ -205,8 +194,23 @@ function PlaceholderAndVanishInput({
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     vanishAndSubmit();
-    onSubmit && onSubmit(e);
+
+    const searchedData = [];
+
+    for (let i = 0; i < algos.length; i++) {
+      if (
+        algos[i].title.toLowerCase().includes(value) ||
+        algos[i].description.toLowerCase().includes(value) ||
+        algos[i].tags.includes(value) ||
+        algos[i].contributor.toLowerCase().includes(value)
+      ) {
+        searchedData.push(algos[i]);
+      }
+    }
+
+    setAlgos(searchedData);
   };
+
   return (
     <form
       className={cn(

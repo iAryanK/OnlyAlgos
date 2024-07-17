@@ -29,7 +29,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 To contribute a new algorithm on OnlyAlgos,
 
 1. create an entry in the **@data/algos.ts**
-2. create the following folder **app/algos/<slug>/page.tsx** where slug is the slug in your entry of **@data/algos.ts**
-3. In **app/algos/<slug>/page.tsx**, write your frontend code.
-4. For backend algorithm logics, create file **<slug>.action.ts** as a sibling of frontend i.e. **app/algos/<slug>/page.tsx**.
+2. create the following folder **app/algos/<<slug>>/page.tsx** where slug is the slug in your entry of **@data/algos.ts**
+3. In **app/algos/<<slug>>/page.tsx**, write your frontend code.
+4. For backend algorithm logics, create file **<<slug>>.action.ts** as a sibling of frontend i.e. **app/algos/<<slug>>/page.tsx**.
 5. Push your updated code on Github and Create a pull request.

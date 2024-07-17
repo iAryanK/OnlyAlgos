@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { Fira_Code } from "next/font/google";
-import "./globals.css";
+import "../globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import Navbar from "@/components/shared/Navbar";
+import Footer from "@/components/shared/Footer";
 
 const fira = Fira_Code({
   subsets: ["latin"],
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
     "Get your most difficult real life problems solved in seconds with OnlyAlogs. Interactive board shows you the solution step by step.",
 };
 
-export default function RootLayout({
+export default function BoardLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -29,8 +30,11 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Navbar />
-          {children}
+          <main className="min-h-screen flex flex-col justify-between">
+            <Navbar />
+            {children}
+            <Footer />
+          </main>
         </ThemeProvider>
       </body>
     </html>
