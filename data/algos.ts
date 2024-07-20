@@ -1,4 +1,4 @@
-export const algos = [
+export const AlgosArray = [
   {
     title: "Lemonade Change",
     slug: "lemonade-change",

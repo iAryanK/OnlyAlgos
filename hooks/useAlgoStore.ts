@@ -1,4 +1,4 @@
-import { algos } from "@/data/algos";
+import { AlgosArray } from "@/data/algos";
 import { create } from "zustand";
 
 interface IOneAlgo {
@@ -15,6 +15,6 @@ interface IAlgos {
 }
 
 export const useAlgos = create<IAlgos>()((set) => ({
-  algos: algos,
+  algos: AlgosArray,
   setAlgos: (newAlgos: IOneAlgo[]) => set({ algos: newAlgos }),
 }));

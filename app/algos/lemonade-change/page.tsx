@@ -141,7 +141,13 @@ const SolutionPanel = ({
   } else {
     return (
       <div className="h-full w-full sm:overflow-y-scroll flex flex-col items-center justify-center">
-        <Image src={"/bubble.gif"} alt="loading" width={100} height={100} />
+        <Image
+          src={"/bubble.gif"}
+          alt="loading"
+          width={100}
+          height={100}
+          unoptimized
+        />
         <p className="text-sm text-zinc-400 pb-10">
           Click on Play to see the solution
         </p>

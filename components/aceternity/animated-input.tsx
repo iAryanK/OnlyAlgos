@@ -4,8 +4,13 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { useAlgos } from "@/hooks/useAlgoStore";
+import { Button } from "../ui/button";
+import { AlgosArray } from "@/data/algos";
 
 export function AnimatedInput() {
+  const [searchText, setSearchText] = useState("");
+  const { algos, setAlgos } = useAlgos();
+
   const placeholders = [
     "Job sequencing",
     "Least recently used cache",
@@ -15,20 +20,45 @@ export function AnimatedInput() {
   ];
 
   return (
-    <div className="h-fit flex flex-col justify-center items-center px-4">
+    <div className="h-full flex flex-col justify-center items-center px-4">
       <h2 className="mb-10 sm:mb-20 text-center text-5xl font-serif font-bold">
         <span className="italic font-normal">Only</span>Algos
       </h2>
-      <PlaceholderAndVanishInput placeholders={placeholders} />
+      <PlaceholderAndVanishInput
+        placeholders={placeholders}
+        setSearchText={setSearchText}
+      />
+
+      <div className="">
+        {searchText && (
+          <div className="pt-2 flex items-center justify-center">
+            <p className="text-md">
+              Showing results for <span className="italic">{searchText}</span>
+            </p>
+            <Button
+              variant={"link"}
+              onClick={() => {
+                setSearchText("");
+                setAlgos(AlgosArray);
+              }}
+              className="text-neutral-500 dark:text-zinc-500 text-sm sm:text-base font-normal"
+            >
+              Reset
+            </Button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
 
 function PlaceholderAndVanishInput({
+  setSearchText,
   placeholders,
   onChange,
   onSubmit,
 }: {
+  setSearchText: (text: string) => void;
   placeholders: string[];
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSubmit?: (e: React.FormEvent<HTMLFormElement>) => void;
@@ -65,8 +95,8 @@ function PlaceholderAndVanishInput({
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const newDataRef = useRef<any[]>([]);
-  const inputRef = useRef<HTMLInputElement>(null);
   const [value, setValue] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
   const [animating, setAnimating] = useState(false);
   const { algos, setAlgos } = useAlgos();
 
@@ -193,22 +223,23 @@ function PlaceholderAndVanishInput({
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    vanishAndSubmit();
 
     const searchedData = [];
-
-    for (let i = 0; i < algos.length; i++) {
+    const regex = new RegExp(value, "i");
+    for (let i = 0; i < AlgosArray.length; i++) {
       if (
-        algos[i].title.toLowerCase().includes(value) ||
-        algos[i].description.toLowerCase().includes(value) ||
-        algos[i].tags.includes(value) ||
-        algos[i].contributor.toLowerCase().includes(value)
+        regex.test(AlgosArray[i].title) ||
+        regex.test(AlgosArray[i].description) ||
+        AlgosArray[i].tags.includes(value) ||
+        regex.test(AlgosArray[i].contributor)
       ) {
-        searchedData.push(algos[i]);
+        searchedData.push(AlgosArray[i]);
       }
     }
 
     setAlgos(searchedData);
+    setSearchText(value);
+    vanishAndSubmit();
   };
 
   return (
