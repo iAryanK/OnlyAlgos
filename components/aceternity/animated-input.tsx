@@ -29,22 +29,22 @@ export function AnimatedInput() {
         setSearchText={setSearchText}
       />
 
-      <div className="">
+      <div>
         {searchText && (
-          <div className="pt-2 flex items-center justify-center">
+          <div className="pt-4 flex max-sm:flex-col items-center justify-center text-center">
             <p className="text-md">
-              Showing results for <span className="italic">{searchText}</span>
+              Showing results for <br />{" "}
+              <span className="italic">{searchText}</span>
             </p>
-            <Button
-              variant={"link"}
+            <button
               onClick={() => {
                 setSearchText("");
                 setAlgos(AlgosArray);
               }}
-              className="text-neutral-500 dark:text-zinc-500 text-sm sm:text-base font-normal"
+              className="border rounded-3xl bg-zinc-800 dark:bg-white dark:text-black dark:hover:bg-white/80 py-1 px-2 mt-2 text-xs hover:bg-zinc-800/80 text-white font-medium transition-all ease-in-out duration-200"
             >
               Reset
-            </Button>
+            </button>
           </div>
         )}
       </div>

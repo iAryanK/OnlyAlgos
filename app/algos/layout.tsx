@@ -4,6 +4,7 @@ import "../globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import Navbar from "@/components/shared/Navbar";
 import Footer from "@/components/shared/Footer";
+import { Toaster } from "@/components/ui/toaster";
 
 const fira = Fira_Code({
   subsets: ["latin"],
@@ -35,6 +36,8 @@ export default function BoardLayout({
             {children}
             <Footer />
           </main>
+
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

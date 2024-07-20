@@ -12,6 +12,7 @@ import Tags from "@/components/board/Tags";
 import { Button } from "@/components/ui/button";
 import { useInput } from "@/hooks/useInputStore";
 import Image from "next/image";
+import { useToast } from "@/components/ui/use-toast";
 
 const Page = () => {
   const [clickedPlay, setClickedPlay] = useState(false);
@@ -80,6 +81,7 @@ const SolutionPanel = ({
   clickedPlay: boolean;
   setClickedPlay: (value: boolean) => void;
 }) => {
+  const { toast } = useToast();
   const { inputValue } = useInput();
 
   if (clickedPlay) {
@@ -89,11 +91,69 @@ const SolutionPanel = ({
       arrayData = inputData;
     } catch (error) {
       setClickedPlay(false);
-      console.error(error);
+      toast({
+        title: "Uh oh! Something went wrong.",
+        description: "Please enter a valid input.",
+      });
     }
 
     let five = 0,
-      ten = 0;
+      ten = 0,
+      twenty = 0;
+    const result = [];
+    for (let index = 0; index < arrayData.length; index++) {
+      let data = arrayData[index];
+      let flag = true;
+      if (data === 5) five++;
+      else if (data === 10) {
+        if (five) {
+          five--;
+          ten++;
+        } else {
+          flag = false;
+        }
+      } else if (data === 20) {
+        if (ten && five) {
+          ten--;
+          five--;
+          twenty++;
+        } else if (five >= 3) {
+          five -= 3;
+          twenty++;
+        } else flag = false;
+      }
+
+      if (!flag) {
+        result.push(
+          <div key={index} className="flex flex-col">
+            <p className="text-md font-medium underline pt-2">
+              Step {index + 1}
+            </p>
+            <p>
+              Loop breaks! Customer {index + 1} cannot be served because we have
+              <ul>
+                <li>{five} note of $5</li>
+                <li>{ten} note of $10</li>
+                <li>{twenty} note of $20</li>
+              </ul>
+              and the customer is paying ${arrayData[index]}.
+            </p>
+          </div>
+        );
+        break;
+      }
+
+      result.push(
+        <div key={index} className="flex flex-col">
+          <p className="text-md font-medium underline pt-2">Step {index + 1}</p>
+          <p>
+            Customer {index + 1} pays ${data}
+          </p>
+          <p>Change in hand: ${five * 5 + ten * 10 + twenty * 20}</p>
+        </div>
+      );
+    }
+
     return (
       <div className="h-full sm:overflow-y-scroll">
         <div className="bg-gray-100 dark:bg-zinc-700 p-2 m-2 rounded-xl text-sm">
@@ -105,36 +165,7 @@ const SolutionPanel = ({
             selling the lemonades.
           </p>
 
-          {arrayData.map((data: number, index: number) => {
-            let flag: boolean = true;
-            if (data === 5) five++;
-            else if (data === 10) {
-              if (five) {
-                five--;
-                ten++;
-              } else {
-                flag = false;
-              }
-            } else if (data === 20) {
-              if (ten && five) {
-                ten--;
-                five--;
-              } else if (five >= 3) five -= 3;
-              else flag = false;
-            }
-
-            return (
-              <div key={index} className="flex flex-col">
-                <p className="text-md font-medium underline pt-2">
-                  Step {index + 1}
-                </p>
-                <p>
-                  Customer {index + 1} pays ${data}
-                </p>
-                <p>Change in hand: ${five * 5 + ten * 10}</p>
-              </div>
-            );
-          })}
+          {result.map((data) => data)}
         </div>
       </div>
     );

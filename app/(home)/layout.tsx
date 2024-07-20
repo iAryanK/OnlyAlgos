@@ -5,7 +5,7 @@ import { ThemeProvider } from "@/components/providers/theme-provider";
 import Navbar from "@/components/shared/Navbar";
 import Footer from "@/components/shared/Footer";
 
-const fira = Fira_Code({
+const fira_code = Fira_Code({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
 });
@@ -23,7 +23,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={fira.className}>
+      <body className={fira_code.className}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
